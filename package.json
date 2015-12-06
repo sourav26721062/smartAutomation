@@ -1,0 +1,15 @@
+
+{
+  "name": "home-automation",
+  "description": "Home automation system using intel galielo and wit.ai",
+  "version": "0.1.0",
+  "main": "server.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+      "express":"latest",
+      "sleep":"latest",
+      "node-wit": "1.0.0"
+  }
+}
