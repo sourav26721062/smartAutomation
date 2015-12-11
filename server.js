@@ -7,7 +7,7 @@ var bodyParser = require('body-parser')
 var mraa = require("mraa");
 
 // Wit.AI Access token
-var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
+var ACCESS_TOKEN = "<Your Wit. AI Token>";
 
 // Various power relays
 var LIGHT_RELAY = 4;
@@ -17,7 +17,7 @@ var MUSIC_RELAY = 5;
 var LED1 = 13;
 
 // Server port.
-var PORT = 80;
+var PORT = 3000;
 
 // Helper function, does debug lighting.
 function light(LED, duration) {
@@ -36,7 +36,6 @@ function listen(phrase) {
   light(LED1, 1);
   console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
-      //console.log("Response from Wit for text input: ");
       if (err) {
         console.log("Wit.AI error: ", err);
       } else {
@@ -48,31 +47,29 @@ function listen(phrase) {
 }
 
 
-/* Called when wit data is back. */
+/* Process Wit AI response. */
 function processWit(response) {
 
-    console.log("process wit called");
-    
     if (response['outcomes'].length == 0) {
         console.log("Invalid response from wit.");
         return;
     }
 
     // find max confidence, use that intent.
-    var maxConf = 0;
-    var bestIntent = "";
+    var Confidence = 0;
+    var bestMatchIntent = "";
     for (i = 0; i < response['outcomes'].length; i++) {
         var outcome = response['outcomes'][i];
         var intent = outcome['intent'];
         var confidence = outcome['confidence'];
         if (confidence > maxConf) {
-            var maxConf = confidence;
-            var bestIntent = intent;
+            var Confidence = confidence;
+            var bestMatchIntent = intent;
         }
     }
     
     // debug
-    console.log("intent: %s, confidence: %s", bestIntent, maxConf);
+    console.log("intent: %s, confidence: %s", bestMatchIntent, Confidence);
     
     // Decide what to do
     switch (bestIntent) {
@@ -120,7 +117,7 @@ var http = require('http').Server(app);
 // Declare endpoints
 app.get('/', function (req, res) {
     'use strict';
-    res.send("<h1>Welcome to Sourav's home automation system!</h1><h3>Check out the /light (GET) and /listen (POST, json phrase:words) endpoints.</h3>");
+    res.send("<h1>Welcome to Sourav's home automation system!</h1>");
 });
 
 app.get('/light', function (req, res) {
